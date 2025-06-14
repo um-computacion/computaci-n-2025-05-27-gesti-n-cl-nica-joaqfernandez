@@ -1,4 +1,4 @@
-class Turno0Ocupado(Exception):
+class TurnoOcupado(Exception):
     pass
 
 class EspecialidadNoEncontrada(Exception):
