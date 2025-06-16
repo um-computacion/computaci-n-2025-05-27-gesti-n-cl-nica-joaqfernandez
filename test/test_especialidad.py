@@ -1,7 +1,7 @@
 import unittest
 from modelo.especialidad import Especialidad
 from modelo.exceptions import EspecialidadNoEncontrada
-#hola
+
 class testEspecialidad(unittest.TestCase):
     def test_especialidad_disponible(self):
         e = Especialidad("Pediatra", ["lunes", "martes", "viernes"])
