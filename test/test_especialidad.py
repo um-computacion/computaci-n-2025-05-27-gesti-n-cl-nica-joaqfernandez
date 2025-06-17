@@ -1,6 +1,6 @@
 import unittest
-from modelo.especialidad import Especialidad
-from modelo.exceptions import EspecialidadNoEncontrada
+from src.modelo.especialidad import Especialidad
+from src.modelo.exceptions import EspecialidadNoEncontrada
 
 class testEspecialidad(unittest.TestCase):
     def test_especialidad_disponible(self):

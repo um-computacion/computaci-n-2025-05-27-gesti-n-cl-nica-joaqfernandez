@@ -1,4 +1,4 @@
-from modelo.especialidad import Especialidad
+from src.modelo.especialidad import Especialidad
 
 class Medico:
     def __init__(self, nombre: str, matricula: str, especialidades: list = None):

@@ -1,6 +1,6 @@
 from datetime import datetime
-from modelo.paciente import Paciente
-from modelo.medico import Medico
+from src.modelo.paciente import Paciente
+from src.modelo.medico import Medico
 
 class Receta:
     def __init__(self, paciente: Paciente, medico: Medico, medicamentos: list[str]):

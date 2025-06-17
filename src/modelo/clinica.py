@@ -1,10 +1,10 @@
-from modelo.paciente import Paciente
-from modelo.medico import Medico
-from modelo.turno import Turno
-from modelo.receta import Receta
-from modelo.historia_clinica import HistoriaClinica
-from modelo.especialidad import Especialidad
-from modelo.exceptions import *
+from src.modelo.paciente import Paciente
+from src.modelo.medico import Medico
+from src.modelo.turno import Turno
+from src.modelo.receta import Receta
+from src.modelo.historia_clinica import HistoriaClinica
+from src.modelo.especialidad import Especialidad
+from src.modelo.exceptions import *
 from datetime import datetime
 
 class Clinica:
