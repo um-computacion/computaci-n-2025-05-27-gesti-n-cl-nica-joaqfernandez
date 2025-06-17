@@ -1,6 +1,6 @@
 import unittest
-from modelo.medico import Medico
-from modelo.especialidad import Especialidad
+from src.modelo.medico import Medico
+from src.modelo.especialidad import Especialidad
 
 class testMedico(unittest.TestCase):
     def test_medico(self):

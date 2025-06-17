@@ -1,6 +1,6 @@
-from modelo.paciente import Paciente
-from modelo.turno import Turno
-from modelo.receta import Receta
+from src.modelo.paciente import Paciente
+from src.modelo.turno import Turno
+from src.modelo.receta import Receta
 
 class HistoriaClinica:
     def __init__(self, paciente: Paciente):

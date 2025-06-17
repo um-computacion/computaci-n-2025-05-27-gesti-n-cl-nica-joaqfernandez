@@ -1,9 +1,9 @@
 import unittest
-from modelo.turno import Turnos
-from modelo.paciente import Paciente
-from modelo.medico import Medico
-from modelo.especialidad import Especialidad
-from modelo.exceptions import EspecialidadNoEncontrada, TurnoOcupado
+from src.modelo.turno import Turnos
+from src.modelo.paciente import Paciente
+from src.modelo.medico import Medico
+from src.modelo.especialidad import Especialidad
+from src.modelo.exceptions import EspecialidadNoEncontrada, TurnoOcupado
 
 class testTurnos(unittest.TestCase):
     def setUp(self):

@@ -1,8 +1,8 @@
 import unittest
-from modelo.receta import Receta
-from modelo.medico import Medico
-from modelo.paciente import Paciente
-from modelo.especialidad import Especialidad
+from src.modelo.receta import Receta
+from src.modelo.medico import Medico
+from src.modelo.paciente import Paciente
+from src.modelo.especialidad import Especialidad
 from datetime import datetime
 
 
