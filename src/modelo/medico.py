@@ -1,4 +1,6 @@
 from src.modelo.especialidad import Especialidad
+from typing import Optional
+
 
 class Medico:
     def __init__(self, nombre: str, matricula: str, especialidades: list = None):
@@ -23,7 +25,7 @@ class Medico:
     def obtener_matricula(self) -> str:
         return self.__matricula
 
-    def obtener_especialidad_para_dia(self, dia: str) -> str | None:
+    def obtener_especialidad_para_dia(self, dia: str) -> Optional[str]:
         dia_lower = dia.lower()
         for especialidad in self.__especialidades:
             if especialidad.verificar_dia(dia_lower):
