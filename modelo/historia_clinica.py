@@ -1,22 +1,33 @@
+from modelo.paciente import Paciente
+from modelo.turno import Turno
+from modelo.receta import Receta
+
 class HistoriaClinica:
-    def __init__(self, paciente):
-        self.paciente = paciente
-        self.turnos = []
-        self.receta = []
+    def __init__(self, paciente: Paciente):
+        if not isinstance(paciente, Paciente):
+            raise ValueError("El paciente debe ser una instancia de la clase Paciente")
+        
+        self.__paciente = paciente
+        self.__turnos = []
+        self.__recetas = []
     
-    def agregar_turno(self, turno):
-        self.turnos.append(turno)
+    def agregar_turno(self, turno: Turno):
+        if not isinstance(turno, Turno):
+            raise ValueError("El turno debe ser una instancia de la clase Turno")
+        self.__turnos.append(turno)
 
-    def agregar_receta(self, receta):
-        self.receta.append(receta)
+    def agregar_receta(self, receta: Receta):
+        if not isinstance(receta, Receta):
+            raise ValueError("La receta debe ser una instancia de la clase Receta")
+        self.__recetas.append(receta)
 
-    def ver_turno(self, turno):
-        return self.turno.copy()
+    def obtener_turnos(self) -> list[Turno]:
+        return self.__turnos.copy()
 
-    def ver_receta(self):
-        return self.receta.copy()
+    def obtener_recetas(self) -> list[Receta]:
+        return self.__recetas.copy()
 
-    def __str__(self):
-        turnos_str = "\n".join(f" - {turno}" for turno in self.turnos)
-        receta_str = "\n".join(f" - {receta}" for receta in {self.receta})
-        return f"Historia clinica del paciente {self.paciente}.: \nTurnos:\n{turnos_str}: \nRecetas:\n{receta_str}"
+    def __str__(self) -> str:
+        turnos_str = "\n".join(f"  - {turno}" for turno in self.__turnos) if self.__turnos else "  - No hay turnos"
+        recetas_str = "\n".join(f"  - {receta}" for receta in self.__recetas) if self.__recetas else "  - No hay recetas"
+        return f"HistoriaClinica({self.__paciente},\nTurnos:\n{turnos_str}\nRecetas:\n{recetas_str})"
