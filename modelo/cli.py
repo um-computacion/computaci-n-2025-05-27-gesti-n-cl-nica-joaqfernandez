@@ -2,6 +2,8 @@ from modelo.clinica import Clinica
 from modelo.paciente import Paciente
 from modelo.medico import Medico
 from modelo.especialidad import Especialidad
+from modelo.exceptions import *
+from datetime import datetime
 
 class CLI:
     def __init__(self):
@@ -11,15 +13,16 @@ class CLI:
         print("\n" + "="*40)
         print("         CLÍNICA MÉDICA")
         print("="*40)
-        print("1. Agregar paciente")
-        print("2. Agregar médico")
-        print("3. Agendar turno")
-        print("4. Emitir receta")
-        print("5. Ver historia clínica")
-        print("6. Ver todos los pacientes")
-        print("7. Ver todos los médicos")
-        print("8. Ver todos los turnos")
-        print("0. Salir")
+        print("1) Agregar paciente")
+        print("2) Agregar médico")
+        print("3) Agendar turno")
+        print("4) Agregar especialidad")
+        print("5) Emitir receta")
+        print("6) Ver historia clínica")
+        print("7) Ver todos los turnos")
+        print("8) Ver todos los pacientes")
+        print("9) Ver todos los médicos")
+        print("0) Salir")
         print("="*40)
     
     def ejecutar(self):
@@ -35,57 +38,79 @@ class CLI:
                 elif opcion == "3":
                     self.agendar_turno()
                 elif opcion == "4":
-                    self.emitir_receta()
+                    self.agregar_especialidad()
                 elif opcion == "5":
-                    self.ver_historia_clinica()
+                    self.emitir_receta()
                 elif opcion == "6":
-                    self.ver_pacientes()
+                    self.ver_historia_clinica()
                 elif opcion == "7":
-                    self.ver_medicos()
-                elif opcion == "8":
                     self.ver_turnos()
+                elif opcion == "8":
+                    self.ver_pacientes()
+                elif opcion == "9":
+                    self.ver_medicos()
                 elif opcion == "0":
                     print("¡Hasta luego!")
                     break
                 else:
                     print("Opción inválida")
             
-            except Exception as e:
+            except (PacienteNoEncontradoException, MedicoNoDisponibleException, 
+                    TurnoOcupadoException, RecetaInvalidaException) as e:
                 print(f"Error: {e}")
+            except Exception as e:
+                print(f"Error inesperado: {e}")
     
     def agregar_paciente(self):
         print("\n--- Agregar Paciente ---")
-        nombre = input("Nombre: ")
-        apellido = input("Apellido: ")
-        edad = int(input("Edad: "))
+        nombre = input("Nombre completo: ")
         dni = input("DNI: ")
+        fecha_nacimiento = input("Fecha de nacimiento (dd/mm/aaaa): ")
         
-        paciente = Paciente(nombre, apellido, edad, dni)
+        paciente = Paciente(nombre, dni, fecha_nacimiento)
         self.clinica.agregar_paciente(paciente)
     
     def agregar_medico(self):
         print("\n--- Agregar Médico ---")
-        nombre = input("Nombre: ")
-        apellido = input("Apellido: ")
-        dni = input("DNI: ")
+        nombre = input("Nombre completo: ")
         matricula = input("Matrícula: ")
         
-        # Especialidades básicas
-        print("Especialidades disponibles:")
-        print("1. Pediatría (Lunes, Miércoles, Viernes)")
-        print("2. Cardiología (Martes, Jueves)")
-        print("3. Clínica Médica (Lunes a Viernes)")
+        medico = Medico(nombre, matricula)
         
-        opcion_esp = input("Seleccione especialidad (1-3): ")
+        # Agregar especialidades
+        while True:
+            print("\nEspecialidades disponibles:")
+            print("1. Pediatría")
+            print("2. Cardiología") 
+            print("3. Clínica Médica")
+            print("4. Otra")
+            print("0. No agregar más especialidades")
+            
+            opcion = input("Seleccione especialidad: ")
+            
+            if opcion == "0":
+                break
+            elif opcion == "1":
+                dias = ["lunes", "miércoles", "viernes"]
+                esp = Especialidad("Pediatría", dias)
+            elif opcion == "2":
+                dias = ["martes", "jueves"]
+                esp = Especialidad("Cardiología", dias)
+            elif opcion == "3":
+                dias = ["lunes", "martes", "miércoles", "jueves", "viernes"]
+                esp = Especialidad("Clínica Médica", dias)
+            elif opcion == "4":
+                tipo = input("Nombre de la especialidad: ")
+                dias_str = input("Días de atención (separados por coma): ")
+                dias = [dia.strip().lower() for dia in dias_str.split(",")]
+                esp = Especialidad(tipo, dias)
+            else:
+                print("Opción inválida")
+                continue
+            
+            medico.agregar_especialidad(esp)
+            print(f"Especialidad {esp.obtener_especialidad()} agregada")
         
-        if opcion_esp == "1":
-            esp = Especialidad("Pediatría", ["Lunes", "Miércoles", "Viernes"])
-        elif opcion_esp == "2":
-            esp = Especialidad("Cardiología", ["Martes", "Jueves"])
-        else:
-            esp = Especialidad("Clínica Médica", ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"])
-        
-        medico = Medico(nombre, apellido, dni, matricula, [esp])
         self.clinica.agregar_medico(medico)
     
     def agendar_turno(self):
@@ -93,10 +118,39 @@ class CLI:
         dni = input("DNI del paciente: ")
         matricula = input("Matrícula del médico: ")
         especialidad = input("Especialidad: ")
-        dia = input("Día (ej: Lunes): ")
-        hora = input("Hora (ej: 10:00): ")
         
-        self.clinica.agendar_turno(dni, matricula, especialidad, dia, hora)
+        # Solicitar fecha y hora
+        fecha_str = input("Fecha (dd/mm/aaaa): ")
+        hora_str = input("Hora (HH:MM): ")
+        
+        # Convertir a datetime
+        try:
+            fecha_hora_str = f"{fecha_str} {hora_str}"
+            fecha_hora = datetime.strptime(fecha_hora_str, "%d/%m/%Y %H:%M")
+        except ValueError:
+            print("Formato de fecha u hora inválido")
+            return
+        
+        self.clinica.agendar_turno(dni, matricula, especialidad, fecha_hora)
+    
+    def agregar_especialidad(self):
+        print("\n--- Agregar Especialidad a Médico ---")
+        matricula = input("Matrícula del médico: ")
+        
+        try:
+            medico = self.clinica.obtener_medico_por_matricula(matricula)
+            
+            tipo = input("Nombre de la especialidad: ")
+            dias_str = input("Días de atención (separados por coma): ")
+            dias = [dia.strip().lower() for dia in dias_str.split(",")]
+            
+            especialidad = Especialidad(tipo, dias)
+            medico.agregar_especialidad(especialidad)
+            
+            print(f"Especialidad {tipo} agregada al médico {medico}")
+            
+        except Exception as e:
+            print(f"Error: {e}")
     
     def emitir_receta(self):
         print("\n--- Emitir Receta ---")
@@ -116,17 +170,26 @@ class CLI:
     def ver_pacientes(self):
         print("\n--- Todos los Pacientes ---")
         pacientes = self.clinica.obtener_pacientes()
-        for paciente in pacientes:
-            print(f"- {paciente}")
+        if not pacientes:
+            print("No hay pacientes registrados")
+        else:
+            for paciente in pacientes:
+                print(f"- {paciente}")
     
     def ver_medicos(self):
         print("\n--- Todos los Médicos ---")
         medicos = self.clinica.obtener_medicos()
-        for medico in medicos:
-            print(f"- {medico}")
+        if not medicos:
+            print("No hay médicos registrados")
+        else:
+            for medico in medicos:
+                print(f"- {medico}")
     
     def ver_turnos(self):
         print("\n--- Todos los Turnos ---")
         turnos = self.clinica.obtener_turnos()
-        for turno in turnos:
-            print(f"- {turno}")
+        if not turnos:
+            print("No hay turnos agendados")
+        else:
+            for turno in turnos:
+                print(f"- {turno}")
